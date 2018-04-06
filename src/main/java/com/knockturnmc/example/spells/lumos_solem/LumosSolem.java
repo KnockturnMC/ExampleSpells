@@ -64,7 +64,7 @@ public class LumosSolem extends Spell {
 
     @Override
     public void castInit() {
-        Spellbook.addEffect(new com.knockturnmc.spells.charms.spellsV5.lumos_solem.LumosSolemEffect(getCasterUUID(), (int) info.getScaling("duration"), info.getLocation(), radius));
+        Spellbook.addEffect(new LumosSolemEffect(getCasterUUID(), (int) info.getScaling("duration"), info.getLocation(), radius));
     }
 
     @Override
