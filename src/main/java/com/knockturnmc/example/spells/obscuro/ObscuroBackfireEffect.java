@@ -1,24 +1,21 @@
 package com.knockturnmc.example.spells.obscuro;
 
-import com.knockturnmc.spellapi.statuseffect.annotation.IdentifiableEffect;
+import com.knockturnmc.spellapi.statuseffect.StatusEffect;
 import com.knockturnmc.spellapi.statuseffect.annotation.SingleInstanceEffect;
-import com.knockturnmc.spellapi.statuseffect.content.RepeatingPotionEffect;
+import com.knockturnmc.spellapi.statuseffect.factory.StatusEffectFactory;
+import com.knockturnmc.spellapi.statuseffect.types.uuid.potion.RepeatingPotionEffectBase;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.UUID;
-
-@IdentifiableEffect(Obscuro.class)
 @SingleInstanceEffect
-public class ObscuroBackfireEffect extends RepeatingPotionEffect {
+public class ObscuroBackfireEffect extends StatusEffect<RepeatingPotionEffectBase<Player>> {
 
-    public ObscuroBackfireEffect(UUID caster, int duration, UUID target) {
-        super(caster, new PotionEffect(PotionEffectType.BLINDNESS, duration, 0), target);
+    public ObscuroBackfireEffect(StatusEffectFactory factory, int ticks, Player caster) {
+        super(factory.repeatingPotionEffect(caster.getUniqueId(), caster, new PotionEffect(PotionEffectType.BLINDNESS, ticks, 0)));
     }
 
-    public ObscuroBackfireEffect(HashMap<String, Serializable> metaMap) {
-        super(metaMap);
+    public ObscuroBackfireEffect(RepeatingPotionEffectBase<Player> base) {
+        super(base);
     }
 }

@@ -24,7 +24,7 @@ import java.util.Objects;
  * Created by Pandetta on 7/2/2015.
  */
 @Magic(type = SpellType.HEX, tier = Tier.TWO, time = 10 * 20, power = 2, success = .45, backfire = .50, pvp = true, data = {
-        @SpellData(incantation = "OBSCURO", motion = "78")
+        @SpellData(incantation = "OBSCURO", motion = "78", inBook = true)
 }, descriptionInstance = ObscuroDesciption.class)
 @Scalable({
         @SpellScaling(name = "duration", type = ScalingType.POWER_SCALING, scaling = .3, cap = 3, transformer = ScalingTransformer.MINUTES)
@@ -55,7 +55,7 @@ public class Obscuro extends Spell {
         info.getTargetEntities().stream()
                 .map(Spellbook.getInstance().getMagicPlayerHandler()::find)
                 .filter(Objects::nonNull)
-                .forEach(player -> player.addStatusEffect(new ObscuroEffect(getCasterUUID(), duration, player.getUUID())));
+                .forEach(player -> player.getEffectContainer().add(new ObscuroEffect(info.getEffectFactory(), duration, getCasterUUID(), player.getPlayer())));
 
         info.kill();
     }
@@ -68,7 +68,10 @@ public class Obscuro extends Spell {
 
     @Override
     public void backfire() {
-        Spellbook.addEffect(new ObscuroBackfireEffect(getCasterUUID(), 30 * 20, getCasterUUID()));
+        Player caster = getCaster();
+        if (caster == null) return;
+
+        Spellbook.addEffect(new ObscuroBackfireEffect(info.getEffectFactory(), 30 * 20, caster));
     }
 
     @Override

@@ -1,24 +1,21 @@
 package com.knockturnmc.example.spells.lumos;
 
-import com.knockturnmc.spellapi.statuseffect.annotation.IdentifiableEffect;
+import com.knockturnmc.spellapi.statuseffect.StatusEffect;
 import com.knockturnmc.spellapi.statuseffect.annotation.SingleInstanceEffect;
-import com.knockturnmc.spellapi.statuseffect.content.RepeatingPotionEffect;
+import com.knockturnmc.spellapi.statuseffect.factory.StatusEffectFactory;
+import com.knockturnmc.spellapi.statuseffect.types.uuid.potion.RepeatingPotionEffectBase;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.UUID;
-
 @SingleInstanceEffect
-@IdentifiableEffect(value = Lumos.class)
-public class LumosEffect extends RepeatingPotionEffect {
+public class LumosEffect extends StatusEffect<RepeatingPotionEffectBase> {
 
-    public LumosEffect(UUID caster, int duration, UUID target) {
-        super(caster, new PotionEffect(PotionEffectType.NIGHT_VISION, duration, 0, false, false), target);
+    public LumosEffect(StatusEffectFactory factory, int ticks, Player caster) {
+        super(factory.repeatingPotionEffect(caster.getUniqueId(), caster, new PotionEffect(PotionEffectType.NIGHT_VISION, ticks, 0)));
     }
 
-    public LumosEffect(HashMap<String, Serializable> metaMap) {
-        super(metaMap);
+    public LumosEffect(RepeatingPotionEffectBase base) {
+        super(base);
     }
 }

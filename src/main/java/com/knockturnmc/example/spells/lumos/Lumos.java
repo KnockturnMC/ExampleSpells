@@ -1,6 +1,7 @@
 package com.knockturnmc.example.spells.lumos;
 
 import com.knockturnmc.api.game.Tier;
+import com.knockturnmc.example.spells.lumos.LumosEffect;
 import com.knockturnmc.spellapi.Spellbook;
 import com.knockturnmc.spellapi.spell.Spell;
 import com.knockturnmc.spellapi.spell.SpellState;
@@ -12,7 +13,6 @@ import com.knockturnmc.spellapi.spell.scaling.Scalable;
 import com.knockturnmc.spellapi.spell.scaling.ScalingTransformer;
 import com.knockturnmc.spellapi.spell.scaling.ScalingType;
 import com.knockturnmc.spellapi.spell.scaling.SpellScaling;
-import com.knockturnmc.spellapi.statuseffect.StatusEffect;
 import com.knockturnmc.spellapi.utils.bukkit.ParticleUtil;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -23,7 +23,7 @@ import org.bukkit.potion.PotionEffectType;
  * Created by Pandetta on 5/24/2015.
  */
 @Magic(type = SpellType.CHARM, tier = Tier.ONE, time = 40, instant = true, success = .99, power = 3, data = {
-        @SpellData(incantation = "LUMOS", motion = "8", inBook = true, description = "The wandlighting spell.")
+        @SpellData(incantation = "LUMOS", motion = "8", inBook = true)
 }, descriptionInstance = LumosDescription.class)
 @Scalable({
         @SpellScaling(name = "duration", type = ScalingType.POWER_SCALING, scaling = 1D, cap = 10, transformer = ScalingTransformer.MINUTES)
@@ -55,12 +55,12 @@ public class Lumos extends Spell {
         if (!player.hasPotionEffect(PotionEffectType.BLINDNESS))
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 0, false, false));
 
-        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-
         int duration = (int) (info.getScaling("duration"));
 
-        StatusEffect build = new LumosEffect(getCasterUUID(), duration, getCasterUUID());
-        Spellbook.getInstance().getStatusEffectManager().addEffect(build);
+        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+
+        LumosEffect lumosEffect = new LumosEffect(info.getEffectFactory(), duration, player);
+        Spellbook.addEffect(lumosEffect);
     }
 
     @Override

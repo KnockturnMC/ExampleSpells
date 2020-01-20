@@ -1,9 +1,10 @@
 package com.knockturnmc.example.spells.immobulus;
 
 import com.knockturnmc.spellapi.spell.info.targets.UnlinkedTargetfinder;
-import com.knockturnmc.spellapi.statuseffect.annotation.IdentifiableEffect;
+import com.knockturnmc.spellapi.statuseffect.StatusEffect;
 import com.knockturnmc.spellapi.statuseffect.annotation.SingleInstanceEffect;
-import com.knockturnmc.spellapi.statuseffect.types.LocationStatusEffect;
+import com.knockturnmc.spellapi.statuseffect.factory.StatusEffectFactory;
+import com.knockturnmc.spellapi.statuseffect.types.LocationStatusEffectBase;
 import com.knockturnmc.spellapi.utils.bukkit.ParticleUtil;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -13,14 +14,13 @@ import org.bukkit.util.Vector;
 import java.util.UUID;
 
 @SingleInstanceEffect(casterUnique = true)
-@IdentifiableEffect(Immobulus.class)
-public class ImmobulusEffect extends LocationStatusEffect {
+public class ImmobulusEffect extends StatusEffect<LocationStatusEffectBase> {
 
     private static final Vector ZERO = new Vector(0, 0, 0);
     private final UnlinkedTargetfinder targetFinder;
 
-    public ImmobulusEffect(UUID caster, int turns, Location location, UnlinkedTargetfinder targetFinder) {
-        super(caster, turns, location);
+    public ImmobulusEffect(StatusEffectFactory factory, int ticks, UUID caster, Location target, UnlinkedTargetfinder targetFinder) {
+        super(factory.locationStatusEffectBase(ticks, caster, target));
         this.targetFinder = targetFinder;
     }
 

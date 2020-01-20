@@ -1,32 +1,30 @@
 package com.knockturnmc.example.spells.lumos_solem;
 
-import com.knockturnmc.spellapi.statuseffect.annotation.IdentifiableEffect;
+import com.knockturnmc.spellapi.statuseffect.StatusEffect;
 import com.knockturnmc.spellapi.statuseffect.annotation.SingleInstanceEffect;
-import com.knockturnmc.spellapi.statuseffect.types.BlockStatusEffect;
+import com.knockturnmc.spellapi.statuseffect.factory.StatusEffectFactory;
+import com.knockturnmc.spellapi.statuseffect.types.block.BlockStatusEffectBase;
 import com.knockturnmc.spellapi.utils.bukkit.BlockFinder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
-import org.bukkit.material.MaterialData;
+import org.bukkit.block.data.BlockData;
 
 import java.util.HashSet;
 import java.util.UUID;
 
-@IdentifiableEffect(LumosSolem.class)
 @SingleInstanceEffect
-public class LumosSolemEffect extends BlockStatusEffect {
+public class LumosSolemEffect extends StatusEffect<BlockStatusEffectBase> {
 
-    private static final BlockFinder BLOCK_FINDER = new BlockFinder(l -> {
-        Material type = l.getBlock().getType();
-        return type == Material.LEAVES || type == Material.LEAVES_2;
-    }, true);
+    private static final BlockFinder BLOCK_FINDER = new BlockFinder(l -> Tag.LEAVES.isTagged( l.getBlock().getType()), true);
 
     private final double radius;
     private final HashSet<Location> blocks = new HashSet<>();
 
-    public LumosSolemEffect(UUID caster, int turns, Location location, double radius) {
-        super(caster, turns, location);
+    public LumosSolemEffect(StatusEffectFactory factory, int ticks, UUID caster, Location location, double radius) {
+        super(factory.blockStatusEffectBase(ticks, caster, location.getBlock()));
         this.radius = radius;
     }
 
@@ -43,14 +41,14 @@ public class LumosSolemEffect extends BlockStatusEffect {
      */
     @Override
     public void start() {
-        BLOCK_FINDER.find(getLocation(), radius).stream()
+        BLOCK_FINDER.find(getBase().getLocation(), radius).stream()
                 .map(Block::getLocation)
-                .filter(l -> !isTemporaryBlock(l))
+                .filter(l -> !getBase().isTemporaryBlock(l))
                 .forEach(loc -> {
                     blocks.add(loc);
-                    addTemporaryBlock(loc);
+                    getBase().addTemporaryBlock(loc);
 
-                    MaterialData leaveData = loc.getBlock().getState().getData();
+                    BlockData leaveData = loc.getBlock().getBlockData();
 
                     loc.getBlock().setType(Material.AIR);
                     loc.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 20, leaveData);
@@ -62,7 +60,7 @@ public class LumosSolemEffect extends BlockStatusEffect {
      */
     @Override
     public void end() {
-        blocks.forEach(this::removeTemporaryBlock);
+        blocks.forEach(getBase()::removeTemporaryBlock);
         blocks.clear();
     }
 }

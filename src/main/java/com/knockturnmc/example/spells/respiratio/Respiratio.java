@@ -41,7 +41,7 @@ public class Respiratio extends Spell {
         if (magicCaster == null) return;
 
         int duration = (int) (info.getScaling("duration"));
-        magicCaster.addStatusEffect(new RespiratioEffect(getCasterUUID(), duration, getCasterUUID()));
+        magicCaster.getEffectContainer().add(new RespiratioEffect(info.getEffectFactory(), duration, magicCaster.getPlayer()));
 
         info.kill();
     }

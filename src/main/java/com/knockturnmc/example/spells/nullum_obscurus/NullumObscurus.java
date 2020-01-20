@@ -15,11 +15,10 @@ import com.knockturnmc.spellapi.spell.scaling.Scalable;
 import com.knockturnmc.spellapi.spell.scaling.ScalingTransformer;
 import com.knockturnmc.spellapi.spell.scaling.ScalingType;
 import com.knockturnmc.spellapi.spell.scaling.SpellScaling;
-import org.bukkit.Color;
-import org.bukkit.entity.Player;
-
 import java.util.List;
 import java.util.Objects;
+import org.bukkit.Color;
+import org.bukkit.entity.Player;
 
 /**
  * Created by Pandetta on 7/2/2015.
@@ -60,7 +59,7 @@ public class NullumObscurus extends Spell {
                 .map(Spellbook.getInstance().getMagicPlayerHandler()::find)
                 .filter(Objects::nonNull)
                 .forEach(player -> {
-                    player.getEffects(ObscuroEffect.class).forEach(effect -> effect.setTicks(effect.getTicks() + duration));
+                    player.getEffectContainer().getEffects(ObscuroEffect.class).forEach(effect -> effect.getBase().setTicks(effect.getBase().getTicks() + duration));
                 });
 
         info.kill();
@@ -74,7 +73,10 @@ public class NullumObscurus extends Spell {
 
     @Override
     public void backfire() {
-        Spellbook.addEffect(new NullumObscurusBackfireEffect(getCasterUUID(), 20 * 20, getCasterUUID()));
+        Player caster = getCaster();
+        if (caster == null) return;
+
+        Spellbook.addEffect(new NullumObscurusBackfireEffect(info.getEffectFactory(), 50 * 20, caster));
     }
 
     @Override

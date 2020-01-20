@@ -1,6 +1,8 @@
 package com.knockturnmc.example.spells.flarespell;
 
 import com.knockturnmc.api.game.Tier;
+import com.knockturnmc.example.spells.flarespell.Flare;
+import com.knockturnmc.example.spells.flarespell.FlareSpellDescription;
 import com.knockturnmc.spellapi.spell.Spell;
 import com.knockturnmc.spellapi.spell.annotation.Magic;
 import com.knockturnmc.spellapi.spell.annotation.SpellData;

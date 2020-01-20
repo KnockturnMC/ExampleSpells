@@ -8,7 +8,10 @@ public class FlareSpellDescription extends SpellDescription {
 
     @Override
     public String buildDescription(MagicPlayer magicPlayer, boolean b) {
-        return ChatColor.GRAY + getSourceClass().getFormattedIncantation() + " will fly " + getScaling("length", magicPlayer, b) + ChatColor.GRAY + " blocks";
+        Flare flare = Flare.valueOf(getSourceClass().getUpperCaseIncantation());
+
+        return ChatColor.GRAY + getSourceClass().getFormattedIncantation() + " will spawn a " + flare.getColorString() +
+                " flare for " + getScaling("length", magicPlayer, b) + ChatColor.GRAY + " blocks";
     }
 
 }

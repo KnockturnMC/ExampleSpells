@@ -1,6 +1,8 @@
 package com.knockturnmc.example.spells.lumos_solem;
 
 import com.knockturnmc.api.game.Tier;
+import com.knockturnmc.example.spells.lumos_solem.LumosSolemDescription;
+import com.knockturnmc.example.spells.lumos_solem.LumosSolemEffect;
 import com.knockturnmc.spellapi.Spellbook;
 import com.knockturnmc.spellapi.spell.Spell;
 import com.knockturnmc.spellapi.spell.SpellState;
@@ -36,6 +38,7 @@ import java.util.List;
 public class LumosSolem extends Spell {
 
     private static final int CAST_CALLED = 10;
+    static final int LEAVE_DECAY_PREVENT_RADIUS_SQUARED = 50 * 50;
 
     private double radius = 0;
     private double radiusGrowth = 0;
@@ -64,7 +67,7 @@ public class LumosSolem extends Spell {
 
     @Override
     public void castInit() {
-        Spellbook.addEffect(new LumosSolemEffect(getCasterUUID(), (int) info.getScaling("duration"), info.getLocation(), radius));
+        Spellbook.addEffect(new LumosSolemEffect(info.getEffectFactory(), (int) info.getScaling("duration"), getCasterUUID(), info.getLocation(), radius));
     }
 
     @Override

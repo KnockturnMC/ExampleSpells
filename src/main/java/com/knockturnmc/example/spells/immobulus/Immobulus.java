@@ -53,7 +53,7 @@ public class Immobulus extends Spell {
 
         int duration = (int) info.getScaling("duration");
 
-        Spellbook.getInstance().getStatusEffectManager().addEffect(new ImmobulusEffect(getCasterUUID(), duration, info.getTargetLocation(), unlinkedCopy));
+        Spellbook.addEffect(new ImmobulusEffect(info.getEffectFactory(), duration, getCasterUUID(), info.getTargetLocation(), unlinkedCopy));
         info.kill();
     }
 
